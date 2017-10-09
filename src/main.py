@@ -13,11 +13,13 @@ from PyQt5.QtWidgets import QApplication, QFileDialog, QTableWidgetItem
 
 import AuxiliaryMethods
 
+color="red";
+
 app = QApplication(sys.argv)
 
 MainWindow = uic.loadUi('gui/mainform.ui')
 SearchRes = uic.loadUi('gui/SearchResults.ui')
-TextAnalysisWindow = uic.loadUi('gui/TextAnalysisWindow.ui')
+#TextAnalysisWindow = uic.loadUi('gui/TextAnalysisWindow.ui')
 GraphsWidget = uic.loadUi('gui/graphs.ui')
 
 #Методы нажатия соответствующих кнопок
@@ -103,7 +105,6 @@ def clear():
     MainWindow.plainTextEdit_Main.setTextCursor(cursor)
 
 def Search():
-    #MainWindow.plainTextEdit_Main.setLineWrapMode(QPlainTextEdit.NoWrap)
     data = SearchRes.plainTextEdit
     analysisText = MainWindow.plainTextEdit_Main.toPlainText()
     searchText = MainWindow.lineEdit_SearchWords.text()
@@ -122,13 +123,13 @@ def Search():
     SearchRes.plainTextEdit.appendPlainText(str(detectedWords))
     SearchRes.plainTextEdit.appendPlainText("**********************************************")
 
-    #Clear previous selections
+    #Стираем результаты предыдущего выделения
     clear()
 
     cursor = MainWindow.plainTextEdit_Main.textCursor()
 
     format = QTextCharFormat()
-    format.setBackground(QBrush(QColor("blue")))
+    format.setBackground(QBrush(QColor("yellow")))
 
 
     searchWordsList = AuxiliaryMethods.getWordsFromString2(MainWindow.lineEdit_SearchWords.text())
@@ -144,16 +145,18 @@ def Search():
     print("PATTERN: ")
     print(pattern)
     regex = QRegExp(pattern)
-    # Process the displayed document
+    # Обработка выбранного документа
     pos = 0
     index = regex.indexIn(MainWindow.plainTextEdit_Main.toPlainText(), pos)
     print("INDEX_" + index.__str__())
     while (index != -1):
-        # Select the matched text and apply the desired format
+
+        # Бираем совпадающий текст и применяем к нему format
         cursor.setPosition(index)
         cursor.movePosition(QTextCursor.EndOfWord, 1)
         cursor.mergeCharFormat(format)
-        # Move to the next match
+
+        #передвигает курсор на позицию следующего совпадение
         pos = index + regex.matchedLength()
         index = regex.indexIn(MainWindow.plainTextEdit_Main.toPlainText(), pos)
     MainWindow.plainTextEdit_Main.moveCursor(QTextCursor.Start)
@@ -191,20 +194,8 @@ def searchButton_click():
     detectedWords = {k:words[k] for k in searchWords.keys() if k in words.keys() }
     print(detectedWords)
 
+
 def Graphs():
-    analysisText = MainWindow.plainTextEdit_Main.toPlainText()
-    print(analysisText)
-    #top10 = AuxiliaryMethods.top10Words(MainWindow.plainTextEdit_Main.toPlainText().split())
-
-
-    plt.tight_layout()
-
-    plt.show()
-
-
-    print(top10)
-
-def graphicsTextAnalysisButton_click():
     analysisText = MainWindow.plainTextEdit_Main.toPlainText()
     stopText = MainWindow.lineEdit_StopWords.text()
     words = AuxiliaryMethods.getWordsFromString(analysisText)
@@ -218,21 +209,13 @@ def graphicsTextAnalysisButton_click():
     finalwords={k:v for k,v in temp.items() if k not in stopWordsFromStats.keys()}
     print("FINALWORDS")
     print(finalwords.items())
-   # print(sorted(finalwords.items(), key=lambda x: x[1], reverse=True)[:10])
-    # t = sorted( [(x,len(words[x])) for x in segnifikentWords] , key=lambda x: x[1], reverse=True)
+
     print(sorted(finalwords.items(), key=lambda x: x[1], reverse=True)[:10])
     t=sorted(finalwords.items(), key=lambda x: x[1], reverse=True)
     tmp = t[:10]
 
-  #  plt.close('all')
     plt.figure(1)
 
-
-   # ax1 = plt.subplot(221)
-
-
-
- #   ax2 = plt.subplot(223)
 
     t1 = np.arange(0.0, 5.0, 0.1)
     t2 = np.arange(0.0, 5.0, 0.02)
@@ -252,72 +235,16 @@ def graphicsTextAnalysisButton_click():
     plt.show()
 
 
- #   ax1 = plt.subplot2grid((3, 3), (1, 1))
- #   ax2 = plt.subplot2grid((2, 2), (1, 0))
-   # ax3 = plt.subplot2grid((2, 2), (1, 0))
-  #  ax4 = plt.subplot2grid((2, 2), (1, 1))
-
-   # if len(tmp)>0:
-#
-       # ax1.bar(range(len(tmp)), [x[1] for x in tmp], width=0.1, tick_label=[x[0] for x in tmp])
-       # ax1.set_title("Top 10 words")
-
-       # x = np.arange(tmp[0][1], 0, 0.01)
-
-       # ax2.pie([x[1] for x in tmp], labels=[x[0] for x in tmp], autopct='%1.1f%%')
-       # ax2.set_title(" top 10 words frequencies")
-
-      #  ax3.plot(range(len(tmp)), [x[1] for x in tmp], range(len(tmp)),[x[1] for x in tmp], 'ro')
-
-      #  ax4.plot(2, x[1] ** 2)
-
-  #  plt.tight_layout()
-
     plt.show()
-  #  GraphsWidget.tab1=QWidget()
-   # GraphsWidget.addTab(self.tab1, "Tab 1")
-   # GraphsWidget.figure = plt.figure(figsize=(10, 5))
-   # GraphsWidget.resize(800, 480)
-   # GraphsWidget.canvas = FigureCanvas(self.figure)
-
-   # layout = QtGui.QVBoxLayout()
-   # layout.addWidget(self.canvas)
-   # self.tab1.setLayout(layout)
-   # self.plot()
 
 
-   # GraphsWidget.addTab(GraphsWidget.tab1, "lalala")
-   # GraphsWidget.addTab(GraphsWidget.tab2, "qwe")
-   # GraphsWidget.addTab(GraphsWidget.tab3, "asd 3")
-   # GraphsWidget.insertTab(1,plt,"qwe")
-   # GraphsWidget.tab1 = QWidget()
-   # GraphsWidget.addTab(GraphsWidget.tab1, "Tab 1")
-   # GraphsWidget.figure = plt.figure(figsize=(10, 5))
-   # GraphsWidget.resize(800, 480)
-   # GraphsWidget.canvas = FigureCanvas(GraphsWidget.figure)
-
-   # layout = QVBoxLayout()
-   # layout.addWidget(GraphsWidget.canvas)
-   # GraphsWidget.tab1.setLayout(layout)
-   # GraphsWidget.plot()
-    #GraphsWidget.show()
-   # main = MyTab(GraphsWidget)
-   # main.show()
-
-
-#def plot():
- #   data = [random.random() for i in range(10)]
- #   ax = self.figure.add_subplot(111)
-  #  ax.hold(False)
-   # ax.plot(data, '*-')
-  #  self.canvas.draw()
-#Подключение методов к кнопкам
+#Подключение методов к элементам
 MainWindow.pickFileButt.clicked.connect(ChooseFile)
 MainWindow.pushButton_Proceed.clicked.connect(Proceed)
 MainWindow.pushButton_SearchButt.clicked.connect(Search)
 SearchRes.pushButton.clicked.connect(SaveSearchToFile)
 SearchRes.pushButton_2.clicked.connect(ClearRes)
-MainWindow.pushButton_Stats.clicked.connect(graphicsTextAnalysisButton_click)
+MainWindow.pushButton_Stats.clicked.connect(Graphs)
 MainWindow.pushButton_PickFileButt2.clicked.connect(browseButton_click)
 
 
