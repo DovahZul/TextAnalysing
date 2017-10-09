@@ -1,0 +1,2 @@
+# TextAnalysing
+training with python
