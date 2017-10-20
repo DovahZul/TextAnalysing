@@ -1,7 +1,7 @@
 # Text Analysis
 Practicing with python
 
-Used enviroment:
+<b>Used enviroment:</b><br>
 PyCharm Community Edition 2017.2.3;<br>
 Qt4 Designer 4.8.7;<br>
 python 3.5.2;<br>
